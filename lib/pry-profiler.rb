@@ -1,3 +1,6 @@
+require 'method_profiler'
+
+require_relative 'pry-profiler/pryfiler'
 require_relative 'pry-profiler/commands/profile_method'
 
 module PryProfiler
