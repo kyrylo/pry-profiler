@@ -1,4 +1,5 @@
 module PryProfiler
+  Command = Class.new
 
   class Command::ProfileMethod < Pry::ClassCommand
     match 'profile-method'
@@ -13,4 +14,5 @@ module PryProfiler
     end
   end
 
+  Pry::Commands.add_command(PryProfiler::Command::ProfileMethod)
 end

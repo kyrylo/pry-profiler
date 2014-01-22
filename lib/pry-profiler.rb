@@ -1,4 +1,4 @@
-require_relative 'pry_profiler/commands/profile_method'
+require_relative 'pry-profiler/commands/profile_method'
 
 module PryProfiler
 

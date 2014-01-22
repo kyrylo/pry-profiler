@@ -1,7 +1,7 @@
 require_relative 'setup'
 
-class PryProfiler < Minitest::Test
+class PryProfilerTest < Minitest::Test
   def test_stub
-    skip "Write me!"
+    skip 'Write me!'
   end
 end
