@@ -16,14 +16,13 @@ module PryProfiler
     end
 
     def process
-      if args.empty?
-        output.puts help
-      else
-        state.profiler = PryProfiler::Pryfiler.new(args.first, _pry_)
-        if state.profiler.method.class == Class
-          output.puts "The command cannot profile classes"
-        end
+      return output.puts(help) if args.empty?
+
+      state.profiler = PryProfiler::Pryfiler.new(args.first, _pry_)
+      if state.profiler.method.class == Class
+        output.puts "The command cannot profile classes"
       end
+
       # if opts.stop? && state[:profiling]
       #   state
       # elsif args.first && state[:profiling]
