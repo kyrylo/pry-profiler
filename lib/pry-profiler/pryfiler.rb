@@ -1,34 +1,51 @@
 module PryProfiler
   class Pryfiler
 
-    attr_reader :method
+    attr_accessor :_pry_
 
-    def initialize(method_name, _pry_)
-      @profiling = false
-      @profiler  = nil
-      @method    = lookup_method(method_name, _pry_)
+    attr_reader :method, :running
+
+    alias_method :running?, :running
+
+    def initialize
+      @running  = false
+      @profiler = nil
+      @method   = nil
+      @pry      = nil
+      @report   = nil
+    end
+
+    def method=(method_name)
+      unless _pry_
+        fail(StandardError,
+          'The _pry_ property is `nil`. Set it before setting the method')
+      end
+
+      @method = lookup_method(method_name, _pry_)
     end
 
     def start
-      if @method
-        @profiling = true
+      if @method.class == Pry::Method && !@running
         @profiler = MethodProfiler.observe(@method.owner)
+        @running = true
       else
         false
       end
     end
 
     def stop
-      puts @proifler.report
-      @profiling = false
-    end
-
-    def profiling?
-      @profiling
+      @running = false
+      @report = @profiler.report
+      @profiler = nil
+      true
     end
 
     def method_name
       @method.name_with_owner
+    end
+
+    def report
+      @profiler.report
     end
 
     private
