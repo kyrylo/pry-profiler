@@ -1,7 +1,7 @@
 require_relative '../setup'
-require_relative 'profile_method/test_class'
+require_relative 'method_profile/test_class'
 
-class ProfileMethodTest < Minitest::Test
+class MethodProfileTest < Minitest::Test
   def test_profile_a_single_method
     assert_match(/Started profiling TestClass#fast/,
       pry_eval('profile-method TestClass#fast'))
