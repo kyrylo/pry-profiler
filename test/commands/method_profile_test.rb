@@ -4,7 +4,7 @@ require_relative 'method_profile/test_class'
 class MethodProfileTest < Minitest::Test
   def test_profile_a_single_method
     assert_match(/Started profiling TestClass#fast/,
-      pry_eval('profile-method TestClas#fast'))
+      pry_eval('profile-method TestClass#fast'))
 
     pry_eval('TestClass.new.fast')
     assert_match(/\| #fast /, pry_eval('profile-method --stop'))
@@ -15,19 +15,19 @@ class MethodProfileTest < Minitest::Test
   end
 
   def test_no_arguments_given_when_profiling
-    pry_eval('profile-method PryProfilerDummy#fast')
+    pry_eval('profile-method TestClass#fast')
     assert_match(/Simultaneous profiling is not possible/,
       pry_eval('profile-method'))
   end
 
   def test_impossibility_of_simultaneous_profiling
-    pry_eval('profile-method PryProfilerDummy#fast')
+    pry_eval('profile-method TestClass#fast')
     assert_match(/Simultaneous profiling is not possible/,
-      pry_eval('profile-method PryProfilerDummy#medium'))
+      pry_eval('profile-method TestClass#medium'))
   end
 
   def test_profiling_can_be_stopped
-    pry_eval('profile-method PryProfilerDummy#fast')
+    pry_eval('profile-method TestClass#fast')
     assert_match(/Stopped profiling/, pry_eval('profile-method --stop'))
   end
 
@@ -39,7 +39,7 @@ class MethodProfileTest < Minitest::Test
     assert_match(/Not profiling anything at the moment/,
       pry_eval('profile-method --current'))
 
-    pry_eval('profile-method TestClas#fast')
+    pry_eval('profile-method TestClass#fast')
     assert_match(/Profiling the .+ method/,
       pry_eval('profile-method --current'))
   end

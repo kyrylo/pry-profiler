@@ -9,7 +9,21 @@ module PryProfiler
       Usage: profile-method [METH]
     BANNER
 
+    class NoProfiler
+      def start
+        false
+      end
+    end
+
     def process
+      if args.empty?
+        output.puts help
+      else
+        state.profiler = PryProfiler::Pryfiler.new(args.first, _pry_)
+        if state.profiler.method.class == Class
+          output.puts "The command cannot profile classes"
+        end
+      end
       # if opts.stop? && state[:profiling]
       #   state
       # elsif args.first && state[:profiling]
@@ -19,10 +33,14 @@ module PryProfiler
       # else
 
 
-      state.profiler ||= PryProfiler::Pryfiler.new(args.first, _pry_)
-      state.profiler.start
-      output.puts "[Profiler]: Started profiling #{ state.profiler.method_name }...\n" +
-        "            Do some work and then write `profile-method --stop`."
+      # end
+      # if state.profiler.start
+      #   output.puts "[Profiler]: Started profiling #{ state.profiler.method_name }...\n" +
+      #     "            Do some work and then write `profile-method --stop`."
+      # else
+      #   state.profiler = NoProfiler.new
+      #   output.puts "NOOOO"
+      # end
 
     end
 

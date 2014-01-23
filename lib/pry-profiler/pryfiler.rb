@@ -1,15 +1,21 @@
 module PryProfiler
   class Pryfiler
 
+    attr_reader :method
+
     def initialize(method_name, _pry_)
-      @method = Pry::CodeObject.lookup(method_name, _pry_)
       @profiling = false
-      @profiler = nil
+      @profiler  = nil
+      @method    = lookup_method(method_name, _pry_)
     end
 
     def start
-      @profiling = true
-      @profiler = MethodProfiler.observe(@method.owner)
+      if @method
+        @profiling = true
+        @profiler = MethodProfiler.observe(@method.owner)
+      else
+        false
+      end
     end
 
     def stop
@@ -23,6 +29,12 @@ module PryProfiler
 
     def method_name
       @method.name_with_owner
+    end
+
+    private
+
+    def lookup_method(name, context)
+      Pry::CodeObject.lookup(name, context)
     end
 
   end
