@@ -49,7 +49,9 @@ module PryProfiler
     end
 
     def perform_postlude
-      if args.empty?
+      if opts.stop?
+        output.puts 'Nothing to stop.'
+      elsif args.empty?
         output.puts(help)
       else
         pryfiler.set_profiled_method(args.first, _pry_)

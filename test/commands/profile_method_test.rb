@@ -53,7 +53,6 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_profiling_cannot_be_stopped_when_nothing_was_profiled
-    skip
     assert_match(/Nothing to stop/, pry_eval('profile-method --stop'))
   end
 
