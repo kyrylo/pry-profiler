@@ -22,13 +22,6 @@ class ProfileMethodTest < Minitest::Test
     refute_match(/\| #medium /, @t.last_output)
   end
 
-  def test_output_does_not_contain_unwanted_information
-    @t.eval('profile-method TestClass#medium')
-    @t.eval('TestClass.new.slow', 'profile-method --stop')
-
-    assert_match(/\| #medium /, @t.last_output)
-  end
-
   def test_informing_that_the_method_being_profiled_was_never_invoked
     @t.eval('profile-method TestClass#fast')
     assert_match(/The TestClass#fast method was never invoked/,
