@@ -37,7 +37,11 @@ module PryProfiler
       desired_method_data = method_table.find do |h|
         h[:method] == desired_method
       end
-      MethodProfiler::Report.new([desired_method_data], desired_method)
+      if desired_method_data
+        MethodProfiler::Report.new([desired_method_data], desired_method)
+      else
+        EmptyReport.new(method_name)
+      end
     end
   end
 end

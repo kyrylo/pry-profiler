@@ -1,6 +1,7 @@
 require 'method_profiler'
 
 require_relative 'pry-profiler/pryfiler'
+require_relative 'pry-profiler/pryfiler/empty_report'
 require_relative 'pry-profiler/observable_class'
 require_relative 'pry-profiler/observable_class/unwrapper'
 require_relative 'pry-profiler/commands/profile_method'

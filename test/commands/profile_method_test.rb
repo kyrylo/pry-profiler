@@ -26,12 +26,18 @@ class ProfileMethodTest < Minitest::Test
     assert_match(/\| #medium /, @t.last_output)
   end
 
-  def test_profiling_can_be_applied_twice_to_the_same_method
+  def test_informing_that_the_method_being_profiled_was_not_called_at_all
     @t.eval('profile-method TestClass#fast')
+    assert_match(/The TestClass#fast method was not called at all/,
+      @t.eval('profile-method --stop'))
+  end
+
+  def test_profiling_can_be_applied_twice_to_the_same_method
+    @t.eval('profile-method TestClass#medium')
     @t.eval('profile-method --stop')
 
-    assert_match(/Started profiling TestClass#fast/,
-      @t.eval('profile-method TestClass#fast'))
+    assert_match(/Started profiling TestClass#medium/,
+      @t.eval('profile-method TestClass#medium'))
   end
 
   def test_no_arguments_given
