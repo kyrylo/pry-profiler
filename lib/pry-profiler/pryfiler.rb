@@ -1,58 +1,43 @@
 module PryProfiler
   class Pryfiler
-
-    attr_accessor :_pry_
-
-    attr_reader :method, :running
-
-    alias_method :running?, :running
+    attr_reader :report, :running
 
     def initialize
-      @running  = false
-      @profiler = nil
-      @method   = nil
-      @pry      = nil
-      @report   = nil
+      @running = false
     end
 
-    def method=(method_name)
-      unless _pry_
-        fail(StandardError,
-          'The _pry_ property is `nil`. Set it before setting the method')
-      end
-
-      @method = lookup_method(method_name, _pry_)
+    def set_profiled_method(method_name, context)
+      @method = Pry::CodeObject.lookup(method_name, context)
     end
 
     def start
-      if @method.class == Pry::Method && !@running
-        @profiler = MethodProfiler.observe(@method.owner)
+      unless running
+        @observable_class = ObservableClass.new(@method.owner)
+        @profiler = MethodProfiler.observe(@observable_class.expose)
         @running = true
-      else
-        false
       end
     end
 
     def stop
+      @report = report_current_method
+      @observable_class.unwrap
+    ensure
       @running = false
-      @report = @profiler.report
-      @profiler = nil
-      true
     end
 
     def method_name
       @method.name_with_owner
     end
 
-    def report
-      @profiler.report
-    end
-
     private
 
-    def lookup_method(name, context)
-      Pry::CodeObject.lookup(name, context)
+    def report_current_method
+      method_table = @profiler.report.instance_variable_get(:@data)
+      desired_method = '#' + @method.name
+      desired_method_data = method_table.find do |h|
+        h[:method] == desired_method
+      end
+      MethodProfiler::Report.new([desired_method_data], desired_method)
     end
-
   end
 end

@@ -18,27 +18,35 @@ module PryProfiler
     end
 
     def process
-      if pryfiler.running?
-        if args.empty?
-          if opts.stop?
-            output.puts pryfiler.report
-          end
-        else
-          output.puts '[Profiler]: Simultaneous profiling is not possible.\n' +
-            "             You are already profiling #{ pryfiler.method_name }. " +
-            '             Stop profiling with `profile-method --stop` and then start a new one.'
+      if pryfiler.running
+        perform_prelude
+      else
+        perform_postlude
+      end
+    end
+
+    def perform_prelude
+      if args.empty?
+        if opts.stop?
+          pryfiler.stop
+          output.puts pryfiler.report
         end
       else
-        if args.empty?
-          output.puts(help)
-        else
-          pryfiler._pry_ = _pry_
-          pryfiler.method = args.first
+        output.puts '[Profiler]: Simultaneous profiling is not possible.\n' +
+          "             You are already profiling #{ pryfiler.method_name }. " +
+          '             Stop profiling with `profile-method --stop` and then start a new one.'
+      end
+    end
 
-          if pryfiler.start
-            output.puts "[Profiler]: Started profiling #{ pryfiler.method_name }...\n" +
-              "            Do some work and then write `profile-method --stop`."
-          end
+    def perform_postlude
+      if args.empty?
+        output.puts(help)
+      else
+        pryfiler.set_profiled_method(args.first, _pry_)
+
+        if pryfiler.start
+          output.puts "[Profiler]: Started profiling #{ pryfiler.method_name }...\n" +
+            "            Do some work and then write `profile-method --stop`."
         end
       end
     end
