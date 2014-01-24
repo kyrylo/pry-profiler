@@ -73,6 +73,12 @@ class ProfileMethodTest < Minitest::Test
       pry_eval('profile-method klass'))
   end
 
+  def test_display_help_on_unknown_arguments
+    skip
+    assert_match(/Usage:/, pry_eval('profile-method qdwwdwq'))
+    assert_match(/Usage:/, pry_eval('profile-method --foobar'))
+  end
+
   def test_freak_out_on_nonexistent_methods
     skip
     assert_match(/The .+ method does not exist/, pry_eval('profile-method xxx'))
