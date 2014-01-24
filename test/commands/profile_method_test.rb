@@ -12,7 +12,7 @@ class ProfileMethodTest < Minitest::Test
     @t.eval('profile-method --stop')
   end
 
-  def test_profile_a_single_method
+  def test_profiling
     assert_match(/Started profiling TestClass#slow/,
       @t.eval('profile-method TestClass#slow'))
     @t.eval('TestClass.new.slow', 'profile-method --stop')
@@ -22,13 +22,13 @@ class ProfileMethodTest < Minitest::Test
     refute_match(/\| #medium /, @t.last_output)
   end
 
-  def test_informing_that_the_method_being_profiled_was_never_invoked
+  def test_profiling_without_invocation
     @t.eval('profile-method TestClass#fast')
     assert_match(/The TestClass#fast method was never invoked/,
       @t.eval('profile-method --stop'))
   end
 
-  def test_profiling_can_be_applied_twice_to_the_same_method
+  def test_stopping
     @t.eval('profile-method TestClass#medium')
     @t.eval('profile-method --stop')
 
@@ -36,27 +36,27 @@ class ProfileMethodTest < Minitest::Test
       @t.eval('profile-method TestClass#medium'))
   end
 
-  def test_no_arguments_given
+  def test_stopping_without_profiling
+    assert_match(/Nothing to stop/, pry_eval('profile-method --stop'))
+  end
+
+  def test_zero_arguments
     assert_match(/Usage:/, pry_eval('profile-method'))
   end
 
-  def test_simultaneous_profiling_is_forbidden
+  def test_simultaneous_profiling
     @t.eval('profile-method TestClass#fast')
     assert_match(/Simultaneous profiling is not possible/,
       @t.eval('profile-method TestClass#slow'))
   end
 
-  def test_profiling_can_be_force_stopped_with_abort
+  def test_abortion
     @t.eval('profile-method TestClass#fast')
     assert_match(/Profiling was aborted./,
       @t.eval('profile-method --abort'))
   end
 
-  def test_profiling_cannot_be_stopped_when_nothing_was_profiled
-    assert_match(/Nothing to stop/, pry_eval('profile-method --stop'))
-  end
-
-  def test_displaying_of_the_method_being_profiled
+  def test_current_method
     skip
     assert_match(/Not profiling anything at the moment/,
       pry_eval('profile-method --current'))
@@ -66,31 +66,31 @@ class ProfileMethodTest < Minitest::Test
       pry_eval('profile-method --current'))
   end
 
-  def test_freak_out_on_classes
+  def test_class_profiling
     skip
     klass = Class.new
     assert_match(/The command cannot profile classes/,
       pry_eval('profile-method klass'))
   end
 
-  def test_display_help_on_unknown_arguments
+  def test_unknown_arguments
     skip
     assert_match(/Usage:/, pry_eval('profile-method qdwwdwq'))
     assert_match(/Usage:/, pry_eval('profile-method --foobar'))
   end
 
-  def test_freak_out_on_nonexistent_methods
+  def test_nonexistent_methods
     skip
     assert_match(/The .+ method does not exist/, pry_eval('profile-method xxx'))
   end
 
-  def test_the_last_benchmark_is_stored_in_memory
+  def test_last_result
     skip
     pry_eval('TestClass.new.fast')
     assert_match(/\| #fast /, pry_eval('profile-method --last-result'))
   end
 
-  def test_the_last_benchmark_is_nil_when_nothing_was_benchmarked
+  def test_last_result_without_profiling
     skip
     assert_nil pry_eval('profile-method --last-result')
   end
