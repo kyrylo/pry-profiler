@@ -46,17 +46,10 @@ class ProfileMethodTest < Minitest::Test
       @t.eval('profile-method TestClass#slow'))
   end
 
-  def test_impossibility_of_simultaneous_profiling
-    skip
-    pry_eval('profile-method TestClass#fast')
-    assert_match(/Simultaneous profiling is not possible/,
-      pry_eval('profile-method TestClass#medium'))
-  end
-
-  def test_profiling_can_be_stopped
-    skip
-    pry_eval('profile-method TestClass#fast')
-    assert_match(/Stopped profiling/, pry_eval('profile-method --stop'))
+  def test_profiling_can_be_force_stopped_with_abort
+    @t.eval('profile-method TestClass#fast')
+    assert_match(/Profiling was aborted./,
+      @t.eval('profile-method --abort'))
   end
 
   def test_profiling_cannot_be_stopped_when_nothing_was_profiled

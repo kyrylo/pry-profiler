@@ -11,6 +11,7 @@ module PryProfiler
 
     def options(opt)
       opt.on :s, :stop, 'Stop profiling and output results', argument: false
+      opt.on :a, :abort, 'Force stop profiling (results are not displayed)', argument: false
     end
 
     def pryfiler
@@ -29,7 +30,15 @@ module PryProfiler
       if args.empty?
         if opts.stop?
           pryfiler.stop
-          output.puts pryfiler.report
+          report_msg = [
+            pryfiler.report.to_s,
+            "Use `profile-method --abort` to stop profiling."
+          ].join("\n")
+          output.puts report_msg
+          state.pryfiler = PryProfiler::Pryfiler.new
+        elsif opts.abort?
+          pryfiler.stop
+          output.puts "Profiling was aborted. The results will not be displayed."
           state.pryfiler = PryProfiler::Pryfiler.new
         end
       else
