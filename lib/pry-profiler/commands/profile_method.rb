@@ -29,7 +29,8 @@ module PryProfiler
       if args.empty?
         if opts.stop?
           pryfiler.stop
-          output.puts '[Profiler]: ' + pryfiler.report
+          output.puts pryfiler.report
+          state.pryfiler = PryProfiler::Pryfiler.new
         end
       else
         output.puts '[Profiler]: Simultaneous profiling is not possible.\n' +

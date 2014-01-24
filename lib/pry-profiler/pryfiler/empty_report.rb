@@ -6,7 +6,7 @@ module PryProfiler
       end
 
       def to_s
-        "The #{ @unfound_method } method was not called at all."
+        "The #{ @unfound_method } method was never invoked."
       end
     end
   end

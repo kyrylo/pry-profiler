@@ -8,10 +8,13 @@ class ProfileMethodTest < Minitest::Test
     @t = pry_tester
   end
 
+  def teardown
+    @t.eval('profile-method --stop')
+  end
+
   def test_profile_a_single_method
     assert_match(/Started profiling TestClass#slow/,
       @t.eval('profile-method TestClass#slow'))
-
     @t.eval('TestClass.new.slow', 'profile-method --stop')
 
     assert_match(/\| #slow /, @t.last_output)
@@ -26,9 +29,9 @@ class ProfileMethodTest < Minitest::Test
     assert_match(/\| #medium /, @t.last_output)
   end
 
-  def test_informing_that_the_method_being_profiled_was_not_called_at_all
+  def test_informing_that_the_method_being_profiled_was_never_invoked
     @t.eval('profile-method TestClass#fast')
-    assert_match(/The TestClass#fast method was not called at all/,
+    assert_match(/The TestClass#fast method was never invoked/,
       @t.eval('profile-method --stop'))
   end
 
