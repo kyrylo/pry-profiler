@@ -29,7 +29,7 @@ module PryProfiler
       if args.empty?
         if opts.stop?
           pryfiler.stop
-          output.puts pryfiler.report
+          output.puts '[Profiler]: ' + pryfiler.report
         end
       else
         output.puts '[Profiler]: Simultaneous profiling is not possible.\n' +
@@ -46,7 +46,7 @@ module PryProfiler
 
         if pryfiler.start
           output.puts "[Profiler]: Started profiling #{ pryfiler.method_name }...\n" +
-            "            Do some work and then write `profile-method --stop`."
+            '            Do some work and then write `profile-method --stop`.'
         end
       end
     end
