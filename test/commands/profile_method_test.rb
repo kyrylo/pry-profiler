@@ -40,11 +40,10 @@ class ProfileMethodTest < Minitest::Test
     assert_match(/Usage:/, pry_eval('profile-method'))
   end
 
-  def test_no_arguments_given_when_profiling
-    skip
-    pry_eval('profile-method TestClass#fast')
+  def test_simultaneous_profiling_is_forbidden
+    @t.eval('profile-method TestClass#fast')
     assert_match(/Simultaneous profiling is not possible/,
-      pry_eval('profile-method'))
+      @t.eval('profile-method TestClass#slow'))
   end
 
   def test_impossibility_of_simultaneous_profiling

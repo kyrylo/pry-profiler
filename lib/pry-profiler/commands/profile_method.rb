@@ -33,9 +33,9 @@ module PryProfiler
           state.pryfiler = PryProfiler::Pryfiler.new
         end
       else
-        output.puts '[Profiler]: Simultaneous profiling is not possible.\n' +
-          "             You are already profiling #{ pryfiler.method_name }. " +
-          '             Stop profiling with `profile-method --stop` and then start a new one.'
+        output.puts "[Profiler]: Simultaneous profiling is not possible.\n" +
+          "            You are already profiling #{ pryfiler.method_name }.\n" +
+          '            `profile-method --stop` to stop profiling. Then start a new one.'
       end
     end
 
