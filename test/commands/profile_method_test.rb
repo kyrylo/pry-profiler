@@ -61,9 +61,8 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_current_method
-    skip
     @t.eval("profile-method @class#fast")
-    assert_match(/Currently profiling .+#fast/,
+    assert_match(/Currently profiling #<.+>#fast/,
       @t.eval('profile-method --current'))
   end
 

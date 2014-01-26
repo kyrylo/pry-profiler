@@ -12,6 +12,7 @@ module PryProfiler
     def options(opt)
       opt.on :s, :stop, 'Stop profiling and output results', argument: false
       opt.on :a, :abort, 'Force stop profiling (results are not displayed)', argument: false
+      opt.on :c, :current, 'Show the method being profiled', argument: false
     end
 
     def pryfiler
