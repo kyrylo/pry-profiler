@@ -60,10 +60,11 @@ module PryProfiler
         output.puts(help)
       else
         pryfiler.set_profiled_method(args.first, _pry_)
-
         if pryfiler.start
           output.puts "[Profiler]: Started profiling #{ pryfiler.method_name }...\n" +
             '            Do some work and then write `profile-method --stop`.'
+        else
+          output.puts "The `profile-method` command cannot profile classes!"
         end
       end
     end

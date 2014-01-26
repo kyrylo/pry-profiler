@@ -11,7 +11,7 @@ module PryProfiler
     end
 
     def start
-      unless running
+      if !running && @method.class != Pry::WrappedModule
         @observable_class = ObservableClass.new(@method.owner)
         @profiler = MethodProfiler.observe(@observable_class.expose)
         @running = true

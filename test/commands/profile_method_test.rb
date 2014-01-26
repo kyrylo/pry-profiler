@@ -72,10 +72,8 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_class_profiling
-    skip
-    klass = Class.new
-    assert_match(/The command cannot profile classes/,
-      pry_eval('profile-method klass'))
+    assert_match(/The `profile-method` command cannot profile classes/,
+      pry_eval('profile-method Pry'))
   end
 
   def test_unknown_arguments
