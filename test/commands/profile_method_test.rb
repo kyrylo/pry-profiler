@@ -97,18 +97,4 @@ class ProfileMethodTest < Minitest::Test
     skip
     assert_nil pry_eval('profile-method --last-result')
   end
-
-  # ~/code/pry-profiler[master]% pry                                                                                                                                                                                                ◾
-  # [1] pry(main)> class Foo
-  #              |   def bar
-  #              |   end
-  #              | end
-  # => :bar
-  # [2] pry(main)> profile-method Foo#bar
-  # [Profiler]: Started profiling Foo#bar...
-  #             Do some work and then write `profile-method --stop`.
-  # [3] pry(main)> profile-method --stop
-  # ArgumentError: Table must be an array of hashes or array of arrays
-  # from /home/kyrylo/.gem/ruby/2.1.0/gems/hirb-0.7.1/lib/hirb/helpers/table.rb:166:in `initialize'
-
 end
