@@ -67,7 +67,6 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_current_method_without_profiling
-    skip
     assert_match(/Not profiling anything at the moment/,
       pry_eval('profile-method --current'))
   end
