@@ -40,6 +40,8 @@ module PryProfiler
           pryfiler.stop
           output.puts "Profiling was aborted. The results will not be displayed."
           state.pryfiler = PryProfiler::Pryfiler.new
+        elsif opts.current?
+          output.puts "Currently profiling #{ pryfiler.method_name }."
         end
       else
         output.puts "[Profiler]: Simultaneous profiling is not possible.\n" +
@@ -51,6 +53,8 @@ module PryProfiler
     def perform_postlude
       if opts.stop?
         output.puts 'Nothing to stop.'
+      elsif opts.current?
+        output.puts 'Not profiling anything at the moment.'
       elsif args.empty?
         output.puts(help)
       else

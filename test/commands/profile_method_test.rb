@@ -6,16 +6,20 @@ require_relative 'profile_method/test_class'
 class ProfileMethodTest < Minitest::Test
   def setup
     @t = pry_tester
-  end
-
-  def teardown
-    @t.eval('profile-method --stop')
+    @t.context = binding # It was renamed to `push_binding` on Pry's master.
+    @class = Class.new(TestClass) do
+      TestClass.instance_methods(false).each { |method|
+        define_method(method) do
+          self.class.superclass.instance_method(method).bind(self).call
+        end
+      }
+    end
   end
 
   def test_profiling
-    assert_match(/Started profiling TestClass#slow/,
-      @t.eval('profile-method TestClass#slow'))
-    @t.eval('TestClass.new.slow', 'profile-method --stop')
+    assert_match(/Started profiling #<.+>#slow/,
+      @t.eval("profile-method @class#slow"))
+    @t.eval("@class.new.slow", 'profile-method --stop')
 
     assert_match(/\| #slow /, @t.last_output)
     refute_match(/\| #fast /, @t.last_output)
@@ -23,17 +27,17 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_profiling_without_invocation
-    @t.eval('profile-method TestClass#fast')
-    assert_match(/The TestClass#fast method was never invoked/,
+    @t.eval("profile-method @class#fast")
+    assert_match(/The #<.+>#fast method was never invoked/,
       @t.eval('profile-method --stop'))
   end
 
   def test_stopping
-    @t.eval('profile-method TestClass#medium')
+    @t.eval("profile-method @class#medium")
     @t.eval('profile-method --stop')
 
-    assert_match(/Started profiling TestClass#medium/,
-      @t.eval('profile-method TestClass#medium'))
+    assert_match(/Started profiling #<.+>#medium/,
+      @t.eval("profile-method @class#medium"))
   end
 
   def test_stopping_without_profiling
@@ -45,24 +49,27 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_simultaneous_profiling
-    @t.eval('profile-method TestClass#fast')
+    @t.eval("profile-method @class#fast")
     assert_match(/Simultaneous profiling is not possible/,
-      @t.eval('profile-method TestClass#slow'))
+      @t.eval("profile-method @class#slow"))
   end
 
   def test_abortion
-    @t.eval('profile-method TestClass#fast')
+    @t.eval("profile-method @class#fast")
     assert_match(/Profiling was aborted./,
       @t.eval('profile-method --abort'))
   end
 
   def test_current_method
     skip
-    assert_match(/Not profiling anything at the moment/,
-      pry_eval('profile-method --current'))
+    @t.eval("profile-method @class#fast")
+    assert_match(/Currently profiling .+#fast/,
+      @t.eval('profile-method --current'))
+  end
 
-    pry_eval('profile-method TestClass#fast')
-    assert_match(/Profiling the .+ method/,
+  def test_current_method_without_profiling
+    skip
+    assert_match(/Not profiling anything at the moment/,
       pry_eval('profile-method --current'))
   end
 
@@ -86,7 +93,7 @@ class ProfileMethodTest < Minitest::Test
 
   def test_last_result
     skip
-    pry_eval('TestClass.new.fast')
+    pry_eval('#@class.new.fast')
     assert_match(/\| #fast /, pry_eval('profile-method --last-result'))
   end
 
