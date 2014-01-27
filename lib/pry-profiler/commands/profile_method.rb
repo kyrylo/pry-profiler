@@ -13,6 +13,7 @@ module PryProfiler
       opt.on :s, :stop, 'Stop profiling and output results', argument: false
       opt.on :a, :abort, 'Force stop profiling (results are not displayed)', argument: false
       opt.on :c, :current, 'Show the method being profiled', argument: false
+      opt.on :l, :'last-result', 'Output the results of the last benchmark', argument: false
     end
 
     def pryfiler
@@ -35,6 +36,7 @@ module PryProfiler
             pryfiler.report.to_s,
             "Use `profile-method --abort` to stop profiling."
           ].join("\n")
+          state.last_result = report_msg
           output.puts report_msg
           state.pryfiler = PryProfiler::Pryfiler.new
         elsif opts.abort?
@@ -43,6 +45,13 @@ module PryProfiler
           state.pryfiler = PryProfiler::Pryfiler.new
         elsif opts.current?
           output.puts "Currently profiling #{ pryfiler.method_name }."
+        elsif opts.last_result?
+          if state.last_result
+            output.puts state.last_result
+          else
+            output.puts "No last result. Profile something first with\n" +
+              "`profile-method YourClass#your_method`"
+          end
         end
       else
         output.puts "[Profiler]: Simultaneous profiling is not possible.\n" +
@@ -56,6 +65,13 @@ module PryProfiler
         output.puts 'Nothing to stop.'
       elsif opts.current?
         output.puts 'Not profiling anything at the moment.'
+      elsif opts.last_result?
+        if state.last_result
+          output.puts state.last_result
+        else
+          output.puts "No last result. Profile something first with\n" +
+            "`profile-method YourClass#your_method`"
+        end
       elsif args.empty?
         output.puts(help)
       else

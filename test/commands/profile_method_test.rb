@@ -81,19 +81,15 @@ class ProfileMethodTest < Minitest::Test
     assert_match(/Usage:/, pry_eval('profile-method --foobar'))
   end
 
-  def test_nonexistent_methods
-    skip
-    assert_match(/The .+ method does not exist/, pry_eval('profile-method xxx'))
-  end
-
   def test_last_result
-    skip
-    pry_eval('#@class.new.fast')
-    assert_match(/\| #fast /, pry_eval('profile-method --last-result'))
+    @t.eval('profile-method @class#slow', '@class.new.slow')
+    @t.eval('profile-method --stop')
+    assert_match(/\| #slow /, @t.eval('profile-method --last-result'))
   end
 
   def test_last_result_without_profiling
-    skip
-    assert_nil pry_eval('profile-method --last-result')
+    assert_match(/No last result/, @t.eval('profile-method --last-result'))
+    @t.eval('profile-method @class#slow')
+    assert_match(/No last result/, @t.eval('profile-method --last-result'))
   end
 end
