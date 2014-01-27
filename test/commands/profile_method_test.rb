@@ -59,7 +59,7 @@ class ProfileMethodTest < Minitest::Test
 
   def test_abortion
     @t.eval("profile-method @class#fast")
-    assert_match(/Profiling was aborted./,
+    assert_match(/Profiling aborted/,
       @t.eval('profile-method --abort'))
   end
 
