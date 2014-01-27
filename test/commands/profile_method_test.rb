@@ -1,19 +1,22 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../setup'
 require_relative 'profile_method/test_class'
 
 class ProfileMethodTest < Minitest::Test
-  def setup
-    @t = pry_tester
-    @t.context = binding # It was renamed to `push_binding` on Pry's master.
-    @class = Class.new(TestClass) do
-      TestClass.instance_methods(false).each { |method|
+  def build_class_from(superclass)
+    Class.new(superclass) do
+      superclass.instance_methods(false).each { |method|
         define_method(method) do
           self.class.superclass.instance_method(method).bind(self).call
         end
       }
     end
+  end
+
+  def setup
+    @t = pry_tester
+    @t.context = binding # It was renamed to `push_binding` on Pry's master.
+
+    @class = build_class_from(TestClass)
   end
 
   def test_profiling
