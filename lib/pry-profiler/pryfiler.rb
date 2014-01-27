@@ -29,6 +29,10 @@ module PryProfiler
       @method.name_with_owner
     end
 
+    def profiling_entity
+      ProfilingEntity.new(@method)
+    end
+
     private
 
     def report_current_method

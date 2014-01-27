@@ -77,7 +77,6 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_unknown_arguments
-    skip
     assert_match(/Usage:/, pry_eval('profile-method qdwwdwq'))
     assert_match(/Usage:/, pry_eval('profile-method --foobar'))
   end
