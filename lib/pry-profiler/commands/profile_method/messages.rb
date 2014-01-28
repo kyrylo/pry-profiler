@@ -19,8 +19,7 @@ MSG
 
       def no_last_result_msg
         <<MSG
-No last result.
-Profile something first with
+No last result. Profile something first with
 `profile-method YourClass#your_method`
 MSG
       end

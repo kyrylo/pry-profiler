@@ -101,4 +101,19 @@ class ProfileMethodTest < Minitest::Test
     @t.eval('profile-method @class#slow')
     assert_match(/No last result/, @t.eval('profile-method --last-result'))
   end
+
+  def test_last_result_and_abortion_garble
+    @t.eval('profile-method @class#slow', '@class.new.slow')
+    @t.eval('profile-method --stop')
+    @t.eval('profile-method @class#medium', '@class.new.medium')
+    @t.eval('profile-method --abort')
+
+    assert_match(/\| #slow /, @t.eval('profile-method --last-result'))
+  end
+
+  def test_last_result_and_abortion_garble_without_profiling
+    @t.eval('profile-method @class#fast', 'profile-method --stop')
+    @t.eval('profile-method --abort')
+    assert_match(/No last result/, @t.eval('profile-method --last-result'))
+  end
 end
