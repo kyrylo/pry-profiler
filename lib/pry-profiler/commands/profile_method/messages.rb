@@ -62,9 +62,9 @@ MSG
 
       def report_msg
         <<MSG
+Profiling was not stopped.
 #{ pryfiler.report.to_s }
-Try again later or use
-`profile-method --abort` to abort profiling.
+Use `profile-method --abort` to abort profiling.
 MSG
       end
     end

@@ -37,6 +37,7 @@ class ProfileMethodTest < Minitest::Test
 
   def test_stopping
     @t.eval('profile-method @class#medium')
+    @t.eval('@class.new.medium')
     @t.eval('profile-method --stop')
 
     assert_match(/Started profiling #<.+>#medium/,
@@ -45,6 +46,12 @@ class ProfileMethodTest < Minitest::Test
 
   def test_stopping_without_profiling
     assert_match(/Nothing to stop/, pry_eval('profile-method --stop'))
+  end
+
+  def test_stopping_without_profiling_and_abortion
+    @t.eval('profile-method @class#medium')
+    assert_match(/Profiling was not stopped/, @t.eval('profile-method --stop'))
+    assert_match(/Profiling aborted/, @t.eval('profile-method --abort'))
   end
 
   def test_zero_arguments

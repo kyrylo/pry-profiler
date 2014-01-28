@@ -18,11 +18,16 @@ module PryProfiler
       end
     end
 
-    def stop
+    def abort
       @report = report_current_method
       @observable_class.unwrap
     ensure
       @running = false
+    end
+
+    def stop
+      @report = report_current_method
+      abort unless @report.class == EmptyReport
     end
 
     def method_name

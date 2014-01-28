@@ -43,9 +43,9 @@ module PryProfiler
         if opts.stop?
           pryfiler.stop
           output.puts(state.last_result = report_msg)
-          reset_pryfiler
+          reset_pryfiler unless pryfiler.running
         elsif opts.abort?
-          pryfiler.stop
+          pryfiler.abort
           output.puts(abort_msg)
           reset_pryfiler
         elsif opts.current?
