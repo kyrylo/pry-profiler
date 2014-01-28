@@ -21,8 +21,8 @@ class ProfileMethodTest < Minitest::Test
 
   def test_profiling
     assert_match(/Started profiling #<.+>#slow/,
-      @t.eval("profile-method @class#slow"))
-    @t.eval("@class.new.slow", 'profile-method --stop')
+      @t.eval('profile-method @class#slow'))
+    @t.eval('@class.new.slow', 'profile-method --stop')
 
     assert_match(/\| #slow /, @t.last_output)
     refute_match(/\| #fast /, @t.last_output)
@@ -30,17 +30,17 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_profiling_without_invocation
-    @t.eval("profile-method @class#fast")
+    @t.eval('profile-method @class#fast')
     assert_match(/The #<.+>#fast method was never invoked/,
       @t.eval('profile-method --stop'))
   end
 
   def test_stopping
-    @t.eval("profile-method @class#medium")
+    @t.eval('profile-method @class#medium')
     @t.eval('profile-method --stop')
 
     assert_match(/Started profiling #<.+>#medium/,
-      @t.eval("profile-method @class#medium"))
+      @t.eval('profile-method @class#medium'))
   end
 
   def test_stopping_without_profiling
@@ -52,19 +52,19 @@ class ProfileMethodTest < Minitest::Test
   end
 
   def test_simultaneous_profiling
-    @t.eval("profile-method @class#fast")
+    @t.eval('profile-method @class#fast')
     assert_match(/Simultaneous profiling is not possible/,
-      @t.eval("profile-method @class#slow"))
+      @t.eval('profile-method @class#slow'))
   end
 
   def test_abortion
-    @t.eval("profile-method @class#fast")
+    @t.eval('profile-method @class#fast')
     assert_match(/Profiling aborted/,
       @t.eval('profile-method --abort'))
   end
 
   def test_current_method
-    @t.eval("profile-method @class#fast")
+    @t.eval('profile-method @class#fast')
     assert_match(/Currently profiling #<.+>#fast/,
       @t.eval('profile-method --current'))
   end
