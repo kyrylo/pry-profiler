@@ -12,5 +12,5 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.files        = `git ls-files`.split("\n")
 
-  s.add_runtime_dependency 'method_profiler'
+  s.add_runtime_dependency 'method_profiler', '~> 2.0'
 end
