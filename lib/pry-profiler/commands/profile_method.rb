@@ -42,7 +42,8 @@ module PryProfiler
           reset_pryfiler
         elsif opts.abort?
           pryfiler.stop
-          output.puts 'Profiling aborted. The results are not stored displayed.'
+          output.puts "Profiling aborted.\n" +
+            'The results are neither stored nor displayed.'
           reset_pryfiler
         elsif opts.current?
           output.puts "Currently profiling #{ pryfiler.method_name }."
@@ -93,7 +94,8 @@ module PryProfiler
 
     def report_msg
       [pryfiler.report.to_s,
-        'Use `profile-method --abort` to stop profiling.'].join("\n")
+        'Try again later or use',
+        '`profile-method --abort` to abort profiling.'].join("\n")
     end
 
     def reset_pryfiler
