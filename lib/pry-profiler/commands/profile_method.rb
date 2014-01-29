@@ -42,9 +42,10 @@ module PryProfiler
       if args.empty?
         if opts.stop?
           pryfiler.stop
-          output.puts(report_msg)
-          unless pryfiler.running
-            state.last_result = report_msg
+          if pryfiler.running
+            output.puts(no_report_msg)
+          else
+            output.puts(state.last_result = report_msg)
             reset_pryfiler
           end
         elsif opts.abort?

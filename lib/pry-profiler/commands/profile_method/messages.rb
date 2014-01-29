@@ -60,6 +60,12 @@ MSG
       end
 
       def report_msg
+        lines = pryfiler.report.to_s.lines
+        lines[0] = "Successfully profiled #{ pryfiler.method_name }\n"
+        lines.join('')
+      end
+
+      def no_report_msg
         <<MSG
 Profiling was not stopped.
 #{ pryfiler.report.to_s }
