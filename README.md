@@ -29,6 +29,10 @@ The list of supported Rubies:
 * MRI 2.0.0
 * MRI 2.1.0
 
+Known bugs:
+
+* Does not support methods defined on `Kernel`
+
 Credits
 -------
 
