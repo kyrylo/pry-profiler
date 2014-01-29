@@ -59,7 +59,7 @@ MSG
       end
 
       def report_msg
-        lines = pryfiler.report.to_s.lines
+        lines = pryfiler.report.to_s.lines.to_a
         lines[0] = "Successfully profiled #{ pryfiler.method_name }\n"
         lines.join('')
       end
