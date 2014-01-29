@@ -29,7 +29,6 @@ MSG
 Simultaneous profiling is not possible.
 You are already profiling #{ pryfiler.method_name }.
 `profile-method --stop` to stop profiling. Then, give it a new go.
-
 MSG
       end
 
