@@ -76,6 +76,8 @@ module PryProfiler
         else
           output.puts(no_last_result_msg)
         end
+      elsif opts.abort?
+        output.puts(no_abort_msg)
       elsif args.empty?
         output.puts(help)
       else

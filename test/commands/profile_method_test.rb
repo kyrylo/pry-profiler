@@ -116,4 +116,8 @@ class ProfileMethodTest < Minitest::Test
     @t.eval('profile-method --abort')
     assert_match(/No last result/, @t.eval('profile-method --last-result'))
   end
+
+  def test_abortion_without_running
+    assert_match(/Nothing to abort/, pry_eval('profile-method --abort'))
+  end
 end

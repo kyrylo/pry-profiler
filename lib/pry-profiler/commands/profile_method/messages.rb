@@ -66,6 +66,12 @@ Profiling was not stopped.
 Use `profile-method --abort` to abort profiling.
 MSG
       end
+
+      def no_abort_msg
+        <<MSG
+Nothing to abort.
+MSG
+      end
     end
   end
 end
